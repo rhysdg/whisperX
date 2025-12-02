@@ -132,10 +132,15 @@ chmod +x install_jetson.sh
 
 **Usage on Jetson:**
 ```bash
-whisperx audio.wav --model large-v3 --compute_type float16
+whisperx audio.wav --model large-v3 --compute_type int8
 ```
 
 > **Note**: The Jetson ONNX Runtime wheel provides CUDA and TensorRT execution providers for GPU acceleration.
+
+**Known Limitations on Jetson:**
+- **float16 not supported**: CTranslate2 on Jetson/aarch64 does not support efficient float16 inference. Use `--compute_type int8` or `--compute_type float32` instead.
+- **Pyannote VAD compatibility**: The bundled pyannote segmentation model was trained with PyTorch 1.10.0+cu12 but works with PyTorch 2.6.0. We include a patch to handle the `weights_only` loading change in PyTorch 2.6+.
+- **Roadmap**: We're working on updating the model checkpoints and improving Jetson compatibility in future releases.
 
 You may also need to install ffmpeg, rust etc. Follow openAI instructions here https://github.com/openai/whisper#setup.
 
