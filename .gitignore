@@ -169,3 +169,16 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# WhisperX output files
+*.srt
+*.tsv
+*.vtt
+*.json
+
+# Audio files (test inputs/outputs)
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.ogg

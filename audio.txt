@@ -1,2 +1,0 @@
-Hello, this is a test of the Kokoro text-to-speech system.
-If you can hear this, playback is working correctly.
