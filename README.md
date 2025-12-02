@@ -109,6 +109,39 @@ uv sync --all-extras --dev
 
 > **Note**: The development version may contain experimental features and bugs. Use the stable PyPI release for production environments.
 
+#### Option C: NVIDIA Jetson Installation (JetPack 6)
+
+For NVIDIA Jetson devices (Orin Nano, AGX Orin, etc.) running JetPack 6, use the provided installation script which handles the Jetson-specific ONNX Runtime GPU wheel and NumPy compatibility:
+
+```bash
+git clone https://github.com/m-bain/whisperX.git
+cd whisperX
+chmod +x install_jetson.sh
+./install_jetson.sh
+```
+
+**What the script does:**
+1. Installs NumPy <2.0 (required for Jetson ONNX Runtime compatibility)
+2. Downloads and installs the [ONNX Runtime GPU wheel for JetPack 6](https://elinux.org/Jetson_Zoo#ONNX_Runtime) (v1.19.0, Python 3.10)
+3. Installs WhisperX in editable mode
+
+**Requirements:**
+- JetPack 6 (L4T R36.x)
+- Python 3.10
+- CUDA (included with JetPack)
+
+**Usage on Jetson:**
+```bash
+whisperx audio.wav --model large-v3 --compute_type int8
+```
+
+> **Note**: The Jetson ONNX Runtime wheel provides CUDA and TensorRT execution providers for GPU acceleration.
+
+**Known Limitations on Jetson:**
+- **float16 not supported**: CTranslate2 on Jetson/aarch64 does not support efficient float16 inference. Use `--compute_type int8` or `--compute_type float32` instead.
+- **Pyannote VAD compatibility**: The bundled pyannote segmentation model was trained with PyTorch 1.10.0+cu12 but works with PyTorch 2.6.0. We include a patch to handle the `weights_only` loading change in PyTorch 2.6+.
+- **Roadmap**: We're working on updating the model checkpoints and improving Jetson compatibility in future releases.
+
 You may also need to install ffmpeg, rust etc. Follow openAI instructions here https://github.com/openai/whisper#setup.
 
 ### Speaker Diarization

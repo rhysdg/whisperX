@@ -15,6 +15,16 @@ from whisperx.diarize import Segment as SegmentX
 from whisperx.vads.vad import Vad
 from whisperx.log_utils import get_logger
 
+# Fix for PyTorch 2.6+ weights_only=True default
+# Monkey-patch torch.load to force weights_only=False for pyannote models
+# These are trusted model files from pyannote/huggingface
+# Lightning explicitly passes weights_only=True, so we override it
+_original_torch_load = torch.load
+def _patched_torch_load(*args, **kwargs):
+    kwargs['weights_only'] = False  # Always override to False
+    return _original_torch_load(*args, **kwargs)
+torch.load = _patched_torch_load
+
 logger = get_logger(__name__)
 
 
